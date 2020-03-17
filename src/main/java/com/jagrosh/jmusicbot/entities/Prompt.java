@@ -20,6 +20,8 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jagrosh.jmusicbot.entities.Prompt.Level;
+
 /**
  *
  * @author John Grosh (john.a.grosh@gmail.com)
@@ -54,12 +56,12 @@ public class Prompt
         return nogui;
     }
     
-    public void alert(Level level, String context, String message)
+    public void alert(Level info, String context, String message)
     {
         if(nogui)
         {
             Logger log = LoggerFactory.getLogger(context);
-            switch(level)
+            switch(info)
             {
                 case INFO: 
                     log.info(message); 
@@ -80,7 +82,7 @@ public class Prompt
             try 
             {
                 int option = 0;
-                switch(level)
+                switch(info)
                 {
                     case INFO: 
                         option = JOptionPane.INFORMATION_MESSAGE; 
@@ -97,11 +99,15 @@ public class Prompt
                 }
                 JOptionPane.showMessageDialog(null, "<html><body><p style='width: 400px;'>"+message, title, option);
             }
+            catch(RuntimeException e) 
+            {
+            	throw e;
+            }
             catch(Exception e) 
             {
                 nogui = true;
                 alert(Level.WARNING, context, noguiMessage);
-                alert(level, context, message);
+                alert(info, context, message);
             }
         }
     }
