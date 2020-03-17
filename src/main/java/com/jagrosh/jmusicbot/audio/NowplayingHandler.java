@@ -90,9 +90,13 @@ public class NowplayingHandler
             {
                 tc.editMessageById(pair.getValue(), msg).queue(m->{}, t -> lastNP.remove(guildId));
             } 
-            catch(Exception e) 
+            catch(RuntimeException e) 
             {
-                toRemove.add(guildId);
+                throw e;
+            }
+            catch (Exception e)
+            {
+            	toRemove.add(guildId);
             }
         }
         toRemove.forEach(id -> lastNP.remove(id));
