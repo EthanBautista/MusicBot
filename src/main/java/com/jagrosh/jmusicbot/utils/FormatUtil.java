@@ -40,12 +40,14 @@ public class FormatUtil {
         
     public static String progressBar(double percent)
     {
+    	StringBuffer buf = new StringBuffer();
         String str = "";
         for(int i=0; i<12; i++)
             if(i == (int)(percent*12))
-                str+="\uD83D\uDD18"; // 🔘
+                buf.append("\uD83D\uDD18"); // 🔘
             else
-                str+="▬";
+                buf.append("▬");
+        str = buf.toString();
         return str;
     }
     
@@ -62,31 +64,40 @@ public class FormatUtil {
     
     public static String listOfTChannels(List<TextChannel> list, String query)
     {
+    	StringBuffer buf = new StringBuffer();
         String out = " Multiple text channels found matching \""+query+"\":";
+    	buf.append(out);
         for(int i=0; i<6 && i<list.size(); i++)
-            out+="\n - "+list.get(i).getName()+" (<#"+list.get(i).getId()+">)";
+            buf.append("\n - "+list.get(i).getName()+" (<#"+list.get(i).getId()+">)");
         if(list.size()>6)
-            out+="\n**And "+(list.size()-6)+" more...**";
+            buf.append("\n**And "+(list.size()-6)+" more...**");
+        out = buf.toString();
         return out;
     }
     
     public static String listOfVChannels(List<VoiceChannel> list, String query)
     {
+    	StringBuffer buf = new StringBuffer();
         String out = " Multiple voice channels found matching \""+query+"\":";
+        buf.append(out);
         for(int i=0; i<6 && i<list.size(); i++)
-            out+="\n - "+list.get(i).getName()+" (ID:"+list.get(i).getId()+")";
+            buf.append("\n - "+list.get(i).getName()+" (ID:"+list.get(i).getId()+")");
         if(list.size()>6)
-            out+="\n**And "+(list.size()-6)+" more...**";
+            buf.append("\n**And "+(list.size()-6)+" more...**");
+        out = buf.toString();
         return out;
     }
     
     public static String listOfRoles(List<Role> list, String query)
     {
+    	StringBuffer buf = new StringBuffer();
         String out = " Multiple text channels found matching \""+query+"\":";
+        buf.append(out);
         for(int i=0; i<6 && i<list.size(); i++)
-            out+="\n - "+list.get(i).getName()+" (ID:"+list.get(i).getId()+")";
+            buf.append("\n - "+list.get(i).getName()+" (ID:"+list.get(i).getId()+")");
         if(list.size()>6)
-            out+="\n**And "+(list.size()-6)+" more...**";
+            buf.append("\n**And "+(list.size()-6)+" more...**");
+        out = buf.toString();
         return out;
     }
     
