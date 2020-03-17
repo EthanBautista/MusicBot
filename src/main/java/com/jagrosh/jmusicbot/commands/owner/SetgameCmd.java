@@ -50,6 +50,10 @@ public class SetgameCmd extends OwnerCommand
             event.reply(event.getClient().getSuccess()+" **"+event.getSelfUser().getName()
                     +"** is "+(title.isEmpty() ? "no longer playing anything." : "now playing `"+title+"`"));
         }
+        catch(RuntimeException e)
+        {
+            throw e;
+        }
         catch(Exception e)
         {
             event.reply(event.getClient().getError()+" The game could not be set!");
@@ -82,6 +86,10 @@ public class SetgameCmd extends OwnerCommand
                 event.replySuccess("**"+event.getSelfUser().getName()
                         +"** is now streaming `"+parts[1]+"`");
             }
+            catch(RuntimeException e)
+            {
+                throw e;
+            }
             catch(Exception e)
             {
                 event.reply(event.getClient().getError()+" The game could not be set!");
@@ -113,7 +121,13 @@ public class SetgameCmd extends OwnerCommand
             {
                 event.getJDA().getPresence().setGame(Game.listening(title));
                 event.replySuccess("**"+event.getSelfUser().getName()+"** is now listening to `"+title+"`");
-            } catch(Exception e) {
+            } 
+            catch(RuntimeException e)
+            {
+                throw e;
+            }
+            catch(Exception e)
+            {
                 event.reply(event.getClient().getError()+" The game could not be set!");
             }
         }
@@ -143,7 +157,13 @@ public class SetgameCmd extends OwnerCommand
             {
                 event.getJDA().getPresence().setGame(Game.watching(title));
                 event.replySuccess("**"+event.getSelfUser().getName()+"** is now watching `"+title+"`");
-            } catch(Exception e) {
+            } 
+            catch(RuntimeException e)
+            {
+                throw e;
+            }
+            catch(Exception e)
+            {
                 event.reply(event.getClient().getError()+" The game could not be set!");
             }
         }
