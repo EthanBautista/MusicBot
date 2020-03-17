@@ -21,6 +21,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.typesafe.config.ConfigException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -47,8 +49,9 @@ public class PlaylistLoader
         if(folderExists())
         {
             File folder = new File(config.getPlaylistsFolder());
-            return Arrays.asList(folder.listFiles((pathname) -> pathname.getName().endsWith(".txt")))
-                    .stream().map(f -> f.getName().substring(0,f.getName().length()-4)).collect(Collectors.toList());
+
+            return Arrays.asList(folder.listFiles((pathname) -> pathname.getName().endsWith(".txt"))).stream().map(f -> f.getName().substring(0,f.getName().length()-4)).collect(Collectors.toList());
+
         }
         else
         {
