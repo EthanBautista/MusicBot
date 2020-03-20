@@ -15,6 +15,9 @@
  */
 package com.jagrosh.jmusicbot.commands.owner;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.JDAUtilitiesInfo;
 import com.jagrosh.jmusicbot.Bot;
@@ -33,7 +36,7 @@ public class DebugCmd extends OwnerCommand
 {
     private final static String[] PROPERTIES = {"java.version", "java.vm.name", "java.vm.specification.version", 
         "java.runtime.name", "java.runtime.version", "java.specification.version",  "os.arch", "os.name"};
-    
+    Charset charset = StandardCharsets.UTF_16;
     private final Bot bot;
     
     public DebugCmd(Bot bot)
@@ -80,7 +83,7 @@ public class DebugCmd extends OwnerCommand
         
         if(event.isFromType(ChannelType.PRIVATE) 
                 || event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES))
-            event.getChannel().sendFile(sb.toString().getBytes(), "debug_information.txt").queue();
+            event.getChannel().sendFile(sb.toString().getBytes(charset), "debug_information.txt").queue();
         else
             event.reply("Debug Information: " + sb.toString());
     }
