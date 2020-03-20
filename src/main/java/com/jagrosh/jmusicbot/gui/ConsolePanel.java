@@ -35,7 +35,7 @@ public class ConsolePanel extends JPanel {
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
         text.setEditable(false);
-        PrintStream con=new PrintStream(new TextAreaOutputStream(text));
+        PrintStream con = new PrintStream(new TextAreaOutputStream(text));
         System.setOut(con);
         System.setErr(con);
         
