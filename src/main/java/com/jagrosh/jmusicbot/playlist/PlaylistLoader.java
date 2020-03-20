@@ -25,6 +25,8 @@ import com.typesafe.config.ConfigException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
  */
 public class PlaylistLoader
 {
+	Charset charset = StandardCharsets.UTF_16;
     private final BotConfig config;
     
     public PlaylistLoader(BotConfig config)
@@ -86,7 +89,7 @@ public class PlaylistLoader
     
     public void writePlaylist(String name, String text) throws IOException
     {
-        Files.write(Paths.get(config.getPlaylistsFolder()+File.separator+name+".txt"), text.trim().getBytes());
+        Files.write(Paths.get(config.getPlaylistsFolder()+File.separator+name+".txt"), text.trim().getBytes(charset));
     }
     
     public Playlist getPlaylist(String name)
@@ -267,7 +270,7 @@ public class PlaylistLoader
         }
     }
     
-    public class PlaylistLoadError
+    public static class PlaylistLoadError
     {
         private final int number;
         private final String item;
