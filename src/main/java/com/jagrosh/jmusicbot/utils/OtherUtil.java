@@ -33,17 +33,17 @@ import org.json.JSONTokener;
  */
 public class OtherUtil
 {
-    public final static String NEW_VERSION_AVAILABLE = "There is a new version of JMusicBot available!\n"
-                    + "Current version: %s\n"
-                    + "New Version: %s\n\n"
+    public final static String NEW_VERSION_AVAILABLE = "There is a new version of JMusicBot available!%n"
+                    + "Current version: %s%n"
+                    + "New Version: %s%n%n"
                     + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
     
     public static String loadResource(Object clazz, String name)
     {
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getClass().getResourceAsStream(name))))
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getClass().getResourceAsStream(name),"UTF-16")))
         {
             StringBuilder sb = new StringBuilder();
-            reader.lines().forEach(line -> sb.append("\r\n").append(line));
+            reader.lines().forEach(line -> sb.append("\r%n").append(line));
             return sb.toString().trim();
         }
         catch(IOException ex)
