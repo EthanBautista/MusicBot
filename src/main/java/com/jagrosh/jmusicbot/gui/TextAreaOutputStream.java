@@ -17,6 +17,8 @@ package com.jagrosh.jmusicbot.gui;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -31,7 +33,9 @@ public class TextAreaOutputStream extends OutputStream {
 // *************************************************************************************************
 
 private byte[]                          oneByte;                                                    // array for write(int val);
-private Appender                        appender;                                                   // most recent action
+private Appender                        appender;
+static Charset charset = StandardCharsets.UTF_16;
+// most recent action
 
 public TextAreaOutputStream(JTextArea txtara) {
     this(txtara,1000);
