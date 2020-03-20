@@ -21,6 +21,8 @@ import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.typesafe.config.*;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -150,16 +152,18 @@ public class BotConfig
             {
                 String original = OtherUtil.loadResource(this, "/reference.conf");
                 byte[] bytes;
+                Charset charset = StandardCharsets.UTF_16;
                 if(original==null)
                 {
-                    bytes = ("token = "+token+"\r\nowner = "+owner).getBytes();
+                    bytes = ("token = "+token+"\r\nowner = "+owner).getBytes(charset);
                 }
                 else
                 {
+                	
                     bytes = original.substring(original.indexOf(START_TOKEN)+START_TOKEN.length(), original.indexOf(END_TOKEN))
                         .replace("BOT_TOKEN_HERE", token)
                         .replace("0 // OWNER ID", Long.toString(owner))
-                        .trim().getBytes();
+                        .trim().getBytes(charset);
                 }
                 try 
                 {
