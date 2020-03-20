@@ -60,7 +60,7 @@ public class SetgameCmd extends OwnerCommand
         }
     }
     
-    private class SetstreamCmd extends OwnerCommand
+    private static class SetstreamCmd extends OwnerCommand
     {
         private SetstreamCmd()
         {
@@ -97,7 +97,7 @@ public class SetgameCmd extends OwnerCommand
         }
     }
     
-    private class SetlistenCmd extends OwnerCommand
+    private static class SetlistenCmd extends OwnerCommand
     {
         private SetlistenCmd()
         {
@@ -133,7 +133,7 @@ public class SetgameCmd extends OwnerCommand
         }
     }
     
-    private class SetwatchCmd extends OwnerCommand
+    private static class SetwatchCmd extends OwnerCommand
     {
         private SetwatchCmd()
         {
