@@ -34,7 +34,6 @@ public class TextAreaOutputStream extends OutputStream {
 
 private byte[]                          oneByte;                                                    // array for write(int val);
 private Appender                        appender;
-static Charset charset = StandardCharsets.UTF_16;
 // most recent action
 
 public TextAreaOutputStream(JTextArea txtara) {
