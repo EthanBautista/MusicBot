@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 John Grosh (jagrosh)
+ * Copyright 2017 John Grosh <john.a.grosh@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,144 +13,159 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jagrosh.jmusicbot.entities;
+package com.jagrosh.jmusicbot.commands.owner;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
-import javax.swing.JOptionPane;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.jagrosh.jmusicbot.entities.Prompt.Level;
+import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.commands.OwnerCommand;
+import net.dv8tion.jda.core.entities.Game;
 
 /**
  *
- * @author John Grosh (john.a.grosh@gmail.com)
+ * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class Prompt
+public class SetgameCmd extends OwnerCommand
 {
-    private final String title;
-    private final String noguiMessage;
-    
-    private boolean nogui;
-    private Scanner scanner;
-    
-    public Prompt(String title)
+    public SetgameCmd(Bot bot)
     {
-        this(title, null);
+        this.name = "setgame";
+        this.help = "sets the game the bot is playing";
+        this.arguments = "[action] [game]";
+        this.aliases = bot.getConfig().getAliases(this.name);
+        this.guildOnly = false;
+        this.children = new OwnerCommand[]{
+                new SetlistenCmd(),
+                new SetstreamCmd(),
+                new SetwatchCmd()
+        };
     }
-    
-    public Prompt(String title, String noguiMessage)
+
+    @Override
+    protected void execute(CommandEvent event)
     {
-        this(title, noguiMessage, "true".equalsIgnoreCase(System.getProperty("nogui")));
-    }
-    
-    public Prompt(String title, String noguiMessage, boolean nogui)
-    {
-        this.title = title;
-        this.noguiMessage = noguiMessage == null ? "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag." : noguiMessage;
-        this.nogui = nogui;
-    }
-    
-    public boolean isNoGUI()
-    {
-        return nogui;
-    }
-    
-    public void alert(Level info, String context, String message)
-    {
-        if(nogui)
+        String title = event.getArgs().toLowerCase().startsWith("playing") ? event.getArgs().substring(7).trim() : event.getArgs();
+        try
         {
-            Logger log = LoggerFactory.getLogger(context);
-            switch(info)
-            {
-                case INFO: 
-                    log.info(message); 
-                    break;
-                case WARNING: 
-                    log.warn(message); 
-                    break;
-                case ERROR: 
-                    log.error(message); 
-                    break;
-                default: 
-                    log.info(message); 
-                    break;
-            }
+            event.getJDA().getPresence().setGame(title.isEmpty() ? null : Game.playing(title));
+            event.reply(event.getClient().getSuccess()+" **"+event.getSelfUser().getName()
+                    +"** is "+(title.isEmpty() ? "no longer playing anything." : "now playing `"+title+"`"));
         }
-        else
+        catch(RuntimeException e)
         {
-            try 
-            {
-                int option = 0;
-                switch(info)
-                {
-                    case INFO: 
-                        option = JOptionPane.INFORMATION_MESSAGE; 
-                        break;
-                    case WARNING: 
-                        option = JOptionPane.WARNING_MESSAGE; 
-                        break;
-                    case ERROR: 
-                        option = JOptionPane.ERROR_MESSAGE; 
-                        break;
-                    default:
-                        option = JOptionPane.PLAIN_MESSAGE;
-                        break;
-                }
-                JOptionPane.showMessageDialog(null, "<html><body><p style='width: 400px;'>"+message, title, option);
-            }
-            catch(RuntimeException e) 
-            {
-            	throw e;
-            }
-            catch(Exception e) 
-            {
-                nogui = true;
-                alert(Level.WARNING, context, noguiMessage);
-                alert(info, context, message);
-            }
+            throw e;
+        }
+        catch(Exception e)
+        {
+            event.reply(event.getClient().getError()+" The game could not be set!");
         }
     }
-    
-    public String prompt(String content)
+
+    private class SetstreamCmd extends OwnerCommand
     {
-        if(nogui)
+        private SetstreamCmd()
         {
-            if(scanner==null)
-                scanner = new Scanner(System.in,"UTF-16");
+            this.name = "stream";
+            this.aliases = new String[]{"twitch","streaming"};
+            this.help = "sets the game the bot is playing to a stream";
+            this.arguments = "<username> <game>";
+            this.guildOnly = false;
+        }
+
+        @Override
+        protected void execute(CommandEvent event)
+        {
+            String[] parts = event.getArgs().split("\\s+", 2);
+            if(parts.length<2)
+            {
+                event.replyError("Please include a twitch username and the name of the game to 'stream'");
+                return;
+            }
             try
             {
-                System.out.println(content);
-                if(scanner.hasNextLine())
-                    return scanner.nextLine();
-                return null;
+                event.getJDA().getPresence().setGame(Game.streaming(parts[1], "https://twitch.tv/"+parts[0]));
+                event.replySuccess("**"+event.getSelfUser().getName()
+                        +"** is now streaming `"+parts[1]+"`");
+            }
+            catch(RuntimeException e)
+            {
+                throw e;
             }
             catch(Exception e)
             {
-                alert(Level.ERROR, title, "Unable to read input from command line.");
-                e.printStackTrace();
-                return null;
-            }
-        }
-        else
-        {
-            try 
-            {
-                return JOptionPane.showInputDialog(null, content, title, JOptionPane.QUESTION_MESSAGE);
-            }
-            catch(Exception e) 
-            {
-                nogui = true;
-                alert(Level.WARNING, title, noguiMessage);
-                return prompt(content);
+                event.reply(event.getClient().getError()+" The game could not be set!");
             }
         }
     }
-    
-    public static enum Level
+
+    private class SetlistenCmd extends OwnerCommand
     {
-        INFO, WARNING, ERROR;
+        private SetlistenCmd()
+        {
+            this.name = "listen";
+            this.aliases = new String[]{"listening"};
+            this.help = "sets the game the bot is listening to";
+            this.arguments = "<title>";
+            this.guildOnly = false;
+        }
+
+        @Override
+        protected void execute(CommandEvent event)
+        {
+            if(event.getArgs().isEmpty())
+            {
+                event.replyError("Please include a title to listen to!");
+                return;
+            }
+            String title = event.getArgs().toLowerCase().startsWith("to") ? event.getArgs().substring(2).trim() : event.getArgs();
+            try
+            {
+                event.getJDA().getPresence().setGame(Game.listening(title));
+                event.replySuccess("**"+event.getSelfUser().getName()+"** is now listening to `"+title+"`");
+            }
+            catch(RuntimeException e)
+            {
+                throw e;
+            }
+            catch(Exception e)
+            {
+                event.reply(event.getClient().getError()+" The game could not be set!");
+            }
+        }
+    }
+
+    private class SetwatchCmd extends OwnerCommand
+    {
+        private SetwatchCmd()
+        {
+            this.name = "watch";
+            this.aliases = new String[]{"watching"};
+            this.help = "sets the game the bot is watching";
+            this.arguments = "<title>";
+            this.guildOnly = false;
+        }
+
+        @Override
+        protected void execute(CommandEvent event)
+        {
+            if(event.getArgs().isEmpty())
+            {
+                event.replyError("Please include a title to watch!");
+                return;
+            }
+            String title = event.getArgs();
+            try
+            {
+                event.getJDA().getPresence().setGame(Game.watching(title));
+                event.replySuccess("**"+event.getSelfUser().getName()+"** is now watching `"+title+"`");
+            }
+            catch(RuntimeException e)
+            {
+                throw e;
+            }
+            catch(Exception e)
+            {
+                event.reply(event.getClient().getError()+" The game could not be set!");
+            }
+        }
     }
 }
