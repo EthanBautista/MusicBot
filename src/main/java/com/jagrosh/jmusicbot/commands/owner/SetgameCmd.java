@@ -34,14 +34,14 @@ public class SetgameCmd extends OwnerCommand
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
         this.children = new OwnerCommand[]{
-                new SetlistenCmd(),
-                new SetstreamCmd(),
-                new SetwatchCmd()
+            new SetlistenCmd(),
+            new SetstreamCmd(),
+            new SetwatchCmd()
         };
     }
-
+    
     @Override
-    protected void execute(CommandEvent event)
+    protected void execute(CommandEvent event) 
     {
         String title = event.getArgs().toLowerCase().startsWith("playing") ? event.getArgs().substring(7).trim() : event.getArgs();
         try
@@ -59,8 +59,8 @@ public class SetgameCmd extends OwnerCommand
             event.reply(event.getClient().getError()+" The game could not be set!");
         }
     }
-
-    private class SetstreamCmd extends OwnerCommand
+    
+    private static class SetstreamCmd extends OwnerCommand
     {
         private SetstreamCmd()
         {
@@ -96,8 +96,8 @@ public class SetgameCmd extends OwnerCommand
             }
         }
     }
-
-    private class SetlistenCmd extends OwnerCommand
+    
+    private static class SetlistenCmd extends OwnerCommand
     {
         private SetlistenCmd()
         {
@@ -121,7 +121,7 @@ public class SetgameCmd extends OwnerCommand
             {
                 event.getJDA().getPresence().setGame(Game.listening(title));
                 event.replySuccess("**"+event.getSelfUser().getName()+"** is now listening to `"+title+"`");
-            }
+            } 
             catch(RuntimeException e)
             {
                 throw e;
@@ -132,8 +132,8 @@ public class SetgameCmd extends OwnerCommand
             }
         }
     }
-
-    private class SetwatchCmd extends OwnerCommand
+    
+    private static class SetwatchCmd extends OwnerCommand
     {
         private SetwatchCmd()
         {
@@ -157,7 +157,7 @@ public class SetgameCmd extends OwnerCommand
             {
                 event.getJDA().getPresence().setGame(Game.watching(title));
                 event.replySuccess("**"+event.getSelfUser().getName()+"** is now watching `"+title+"`");
-            }
+            } 
             catch(RuntimeException e)
             {
                 throw e;
