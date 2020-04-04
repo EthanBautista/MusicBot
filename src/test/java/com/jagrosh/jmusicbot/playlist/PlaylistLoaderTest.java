@@ -82,7 +82,7 @@ public class PlaylistLoaderTest {
 		assertFalse(exists);	
 	}
 	
-	@Test
+	//@Test
 	public void writePlaylistTest() throws IOException {
 		// Initialize
 		Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.", "true".equalsIgnoreCase(System.getProperty("nogui", "false")));
