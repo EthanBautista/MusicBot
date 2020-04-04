@@ -92,13 +92,18 @@ public class PlaylistLoaderTest {
 		PlaylistLoader playlist = new PlaylistLoader(config);
 		
 		String expectedData = "testing";
-		
+		Path path3 = Paths.get(config.getPlaylistsFolder()+File.separator+"test.txt");
+		File dir3 = new File(path3.toString());
+		if( dir3.exists()) {
+			playlist.deletePlaylist("test");
+		}
 		
 		Path path = Paths.get(config.getPlaylistsFolder()+File.separator+"test.txt");
 		File dir = new File(path.toString());
-		if( !dir.exists()) {
-			playlist.createPlaylist("test");
+		if( dir.exists()) {
+			playlist.deletePlaylist("test");
 		}
+		playlist.createPlaylist("test");
 		playlist.writePlaylist("test", "testing");
 	    BufferedReader reader = new BufferedReader(new FileReader(path.toString()));
 	    String currentLine = reader.readLine();
@@ -157,7 +162,7 @@ public class PlaylistLoaderTest {
 		File dir1 = new File(path1.toString());
 		Path path2 = Paths.get(config.getPlaylistsFolder()+File.separator+"gob.txt");
 		File dir2 = new File(path2.toString());
-		Path path3 = Paths.get(config.getPlaylistsFolder()+File.separator+"gob.txt");
+		Path path3 = Paths.get(config.getPlaylistsFolder()+File.separator+"test.txt");
 		File dir3 = new File(path3.toString());
 		if( dir3.exists()) {
 			playlist.deletePlaylist("test");
