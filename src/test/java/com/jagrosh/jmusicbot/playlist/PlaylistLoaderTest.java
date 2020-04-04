@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
@@ -16,14 +16,14 @@ import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 
 import com.jagrosh.jmusicbot.BotConfig;
 import com.jagrosh.jmusicbot.entities.Prompt;
-
+import org.junit.runners.MethodSorters;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PlaylistLoaderTest {
 	
 	@Test
@@ -102,9 +102,10 @@ public class PlaylistLoaderTest {
 		playlist.writePlaylist("test", "testing");
 	    BufferedReader reader = new BufferedReader(new FileReader(path.toString()));
 	    String currentLine = reader.readLine();
-	    reader.close();
+	    
 	 
 	    assertEquals(expectedData, currentLine);
+	    reader.close();
 	}
 
 	@Test
