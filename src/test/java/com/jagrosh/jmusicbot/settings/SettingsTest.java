@@ -1,16 +1,36 @@
 package com.jagrosh.jmusicbot.settings;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
 import static org.junit.Assert.*;
 
 public class SettingsTest {
+
+    @Before
+    public void backupSettings() throws IOException {
+        if(!Files.exists(Paths.get("serversettings.json.old")) && Files.exists(Paths.get("serversettings.json"))){
+            Files.copy(Paths.get("serversettings.json"), Paths.get("serversettings.json.old"));
+        }
+        Files.deleteIfExists(Paths.get("serversettings.json"));
+    }
+
+    @After
+    public void restoreSettings() throws IOException {
+        if(Files.exists(Paths.get("serversettings.json.old"))){
+            Files.deleteIfExists(Paths.get("serversettings.json"));
+            Files.copy(Paths.get("serversettings.json.old"), Paths.get("serversettings.json"));
+        }
+        Files.deleteIfExists(Paths.get("serversettings.json.old"));
+    }
 
     @Test
     public void SettingsSetTester(){
@@ -38,7 +58,8 @@ public class SettingsTest {
 
     //Verify Default Initialization of settings
     @Test
-    public void defaultSettingsInitialization(){
+    public void defaultSettingsInitialization() throws IOException {
+
         SettingsManager manager = new SettingsManager();
         Settings settings = new Settings(manager, 25, 3, 3, 50, null, true, null);
         settings = manager.getSettings(1L);
@@ -49,21 +70,10 @@ public class SettingsTest {
         Assert.assertEquals(null, settings.getDefaultPlaylist());
         Assert.assertEquals(false, settings.getRepeatMode());
         Assert.assertEquals(null, settings.getPrefix());
-    }
 
-
-    //Delete Settings File
-    @Before
-    public void ClearSettings(){
-        try{
-            Files.deleteIfExists(Paths.get("serversettings.json"));
-        } catch (Exception e){
-
-        }
     }
 
     @Test
-    //INCOMPLETE
     public void WriteReadSettings(){
         SettingsManager manager = new SettingsManager();
         Settings settings; //= new Settings(manager, 25, 3, 3, 50, null, true, null);
