@@ -92,11 +92,6 @@ public class PlaylistLoaderTest {
 		PlaylistLoader playlist = new PlaylistLoader(config);
 		
 		String expectedData = "testing";
-		Path path3 = Paths.get(config.getPlaylistsFolder()+File.separator+"test.txt");
-		File dir3 = new File(path3.toString());
-		if( dir3.exists()) {
-			playlist.deletePlaylist("test");
-		}
 		
 		Path path = Paths.get(config.getPlaylistsFolder()+File.separator+"test.txt");
 		File dir = new File(path.toString());
@@ -125,7 +120,7 @@ public class PlaylistLoaderTest {
 		assertEquals(null,play);
 	}
 	
-	// Probably should fix this
+
 	@Test
 	public void getPlaylistExist() {
 		Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.", "true".equalsIgnoreCase(System.getProperty("nogui", "false")));
@@ -139,13 +134,6 @@ public class PlaylistLoaderTest {
 		
 		assertNotNull(play);
 	}
-	/*
-	//Dont know how to test
-	@Test
-	public void shuffleTest() {
-		fail("Not yet implemented");
-	}
-	*/
 	
 	@Test
 	public void getPlaylistNamesExists() throws IOException {
@@ -193,9 +181,6 @@ public class PlaylistLoaderTest {
 
 	}
 	
-	//TODO:
-	// Playlist functions
-	// PlaylistLoadError functions
 	@Test
 	public void getIndexTest() {
 		Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.", "true".equalsIgnoreCase(System.getProperty("nogui", "false")));
@@ -209,16 +194,5 @@ public class PlaylistLoaderTest {
 		Playlist play =  playlist.getPlaylist("test");
 		
 	}
-	/*
-	@Test
-	public void getItemTest() {
-		fail("Not yet implemented");
-	}
-	
-	@Test
-	public void getReasonTest() {
-		fail("Not yet implemented");
-	}
-	*/
 
 }
